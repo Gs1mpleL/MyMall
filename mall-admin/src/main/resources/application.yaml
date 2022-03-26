@@ -1,0 +1,10 @@
+server:
+  port: 80
+
+spring:
+  datasource:
+    type: com.alibaba.druid.pool.DruidDataSource
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://175.24.174.14:3306/mall?characterEncoding=UTF-8
+    username: root
+    password: Liuzhuohao123.
