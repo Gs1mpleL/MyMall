@@ -8,3 +8,11 @@ spring:
     url: jdbc:mysql://175.24.174.14:3306/mall?characterEncoding=UTF-8
     username: root
     password: Liuzhuohao123.
+
+mybatis-plus:
+  global-config:
+    db-config:
+      id-type: auto
+
+  configuration:
+    log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
