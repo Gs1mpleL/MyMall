@@ -37,9 +37,9 @@
     <resultMap id="mapWithChildren" type="com.wanfeng.dto.PmsProductCategoryWithChildrenItem">
         <result column="id" property="id" />
         <result column="name" property="name" />
-        <collection property="children" ofType="list" columnPrefix="child_">
-            <result column="id" property="id" />
-            <result column="name" property="name" />
+        <collection property="children" ofType="com.wanfeng.pojo.PmsProductCategory">
+            <result column="child_id" property="id" />
+            <result column="child_name" property="name" />
         </collection>
     </resultMap>
     <select id="getListWithChildren" resultMap="mapWithChildren">
