@@ -31,6 +31,16 @@ public class CommonResult {
     public static CommonResult success(Object o){
         return new CommonResult(ResultCode.SUCCESS.getCode(),ResultCode.SUCCESS.getMessage(),o);
     }
+    public static  CommonResult forbidden(Object data) {
+        return new CommonResult(ResultCode.FORBIDDEN.getCode(), ResultCode.FORBIDDEN.getMessage(), data);
+    }
+
+    /**
+     * 未登录返回结果
+     */
+    public static  CommonResult unauthorized(Object data) {
+        return new CommonResult(ResultCode.UNAUTHORIZED.getCode(), ResultCode.UNAUTHORIZED.getMessage(), data);
+    }
 
     /**
      * 操作成功返回结果和信息

@@ -11,6 +11,7 @@
     <modules>
         <module>mall-common</module>
         <module>mall-admin</module>
+        <module>mall-security</module>
     </modules>
 
     <properties>

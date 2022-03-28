@@ -16,3 +16,27 @@ mybatis-plus:
 
   configuration:
     log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
+
+jwt:
+  tokenHeader: Authorization #JWT存储的请求头
+  secret: mall-admin-secret #JWT加解密使用的密钥
+  expiration: 604800 #JWT的超期限时间(60*60*24*7)
+  tokenHead: 'Bearer '  #JWT负载中拿到开头
+
+security:
+  ignored:
+    urls:
+      - /doc.html
+      - /css/**
+      - /js/**
+      - favicon.ico
+      - /webjars/**
+      - /swagger-resources/**
+      - /v2/api-docs/**
+      - /captcha
+      - /admin/login
+      - /admin/register
+      - /admin/info
+      - /admin/logout
+      - /minio/upload
+      - /doc.html
