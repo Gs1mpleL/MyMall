@@ -5,7 +5,6 @@ import com.wanfeng.entry.CommonResult;
 import com.wanfeng.entry.PageResult;
 import com.wanfeng.pojo.PmsBrand;
 import com.wanfeng.service.PmsBrandService;
-import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.annotation.Validated;

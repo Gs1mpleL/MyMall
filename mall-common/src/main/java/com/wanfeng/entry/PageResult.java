@@ -9,7 +9,9 @@ import java.util.List;
 
 /**
  * 分页数据封装类
- * Created by macro on 2019/4/19.
+ *
+ * @author macro
+ * @date 2019/4/19
  */
 @Data
 public class PageResult<T> {
@@ -34,7 +36,10 @@ public class PageResult<T> {
      */
     private List<T> list;
 
-
+    /**
+     * 把list中的内容装入自定义的PageResult
+     * @param list 页面
+     */
     public static <T> PageResult<T> getPageResult(List<T> list){
         PageResult<T> pageResult = new PageResult<T>();
         PageInfo<T> pageInfo = new PageInfo<T>(list);

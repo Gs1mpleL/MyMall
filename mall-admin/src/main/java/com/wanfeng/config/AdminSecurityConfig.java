@@ -19,9 +19,6 @@ public class AdminSecurityConfig extends SecurityConfig{
     @Autowired
     private UmsAdminService  umsAdminService;
 
-
-
-
     /**
      * 自定义登录Service处理器
      */

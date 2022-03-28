@@ -1,4 +1,4 @@
-package com.wanfeng.config;
+package com.wanfeng.component;
 
 import cn.hutool.json.JSONUtil;
 import com.wanfeng.entry.CommonResult;

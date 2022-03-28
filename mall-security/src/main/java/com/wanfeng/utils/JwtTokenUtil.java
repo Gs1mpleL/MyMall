@@ -120,8 +120,4 @@ public class JwtTokenUtil {
         return new Date(System.currentTimeMillis() + expiration * 1000);
     }
 
-
-
-
-
 }

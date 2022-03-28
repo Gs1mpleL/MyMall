@@ -5,6 +5,8 @@ import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.wanfeng.dto.UmsAdminParam;
 import com.wanfeng.mapper.UmsAdminMapper;
 import com.wanfeng.pojo.UmsAdmin;
+import com.wanfeng.service.RedisService;
+import com.wanfeng.service.UmsAdminCacheService;
 import com.wanfeng.service.UmsAdminService;
 import com.wanfeng.utils.JwtTokenUtil;
 import io.jsonwebtoken.Jwt;
@@ -23,13 +25,18 @@ import org.springframework.stereotype.Service;
  */
 @Service
 public class UmsAdminServiceImpl implements UmsAdminService {
-    @Autowired
     private UmsAdminMapper umsAdminMapper;
-    @Autowired
     private JwtTokenUtil jwtTokenUtil;
-    @Autowired
     private PasswordEncoder passwordEncoder;
+    private UmsAdminCacheService umsAdminCacheService;
 
+    @Autowired
+    public UmsAdminServiceImpl(UmsAdminMapper umsAdminMapper, JwtTokenUtil jwtTokenUtil, PasswordEncoder passwordEncoder, UmsAdminCacheService umsAdminCacheService) {
+        this.umsAdminMapper = umsAdminMapper;
+        this.jwtTokenUtil = jwtTokenUtil;
+        this.passwordEncoder = passwordEncoder;
+        this.umsAdminCacheService = umsAdminCacheService;
+    }
 
     @Override
     public String login(UmsAdminParam umsAdminParam) {
@@ -77,7 +84,18 @@ public class UmsAdminServiceImpl implements UmsAdminService {
      */
     @Override
     public UmsAdmin getAdminFromRedisOrDataBase(String username) {
-        System.out.println("这里少一项从redis中获取用户信息的操作");
-        return umsAdminMapper.selectOne(new QueryWrapper<UmsAdmin>().eq("username", username));
+
+
+        UmsAdmin umsAdmin = umsAdminCacheService.getAdmin(username);
+        if(umsAdmin!=null){
+            return umsAdmin;
+        }
+        System.out.println("在Redis中未查询到用户");
+        UmsAdmin umsAdminFromDb = umsAdminMapper.selectOne(new QueryWrapper<UmsAdmin>().eq("username", username));
+        if(umsAdminFromDb!=null){
+            // 在数据库查到后把用户存入redis
+            umsAdminCacheService.setAdmin(umsAdminFromDb);
+        }
+        return umsAdminFromDb;
     }
 }

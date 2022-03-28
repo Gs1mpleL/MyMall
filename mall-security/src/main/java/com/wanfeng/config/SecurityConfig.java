@@ -1,6 +1,8 @@
 package com.wanfeng.config;
 
-import org.springframework.beans.factory.annotation.Autowired;
+import com.wanfeng.component.JwtAuthenticationTokenFilter;
+import com.wanfeng.component.MyAccessDeniedHandler;
+import com.wanfeng.component.MytAuthenticationEntryPoint;
 import org.springframework.context.annotation.Bean;
 import org.springframework.http.HttpMethod;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;

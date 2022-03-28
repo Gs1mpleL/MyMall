@@ -1,11 +1,10 @@
-package com.wanfeng.config;
+package com.wanfeng.component;
 
 import cn.hutool.json.JSONUtil;
 import com.wanfeng.entry.CommonResult;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.web.access.AccessDeniedHandler;
 
-import javax.servlet.ServletException;
 import java.io.IOException;
 
 /**
