@@ -1,9 +1,13 @@
 package com.wanfeng.service.Impl;
 
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.github.pagehelper.PageHelper;
 import com.wanfeng.dto.PmsBrandParam;
+import com.wanfeng.entry.CommonResult;
 import com.wanfeng.mapper.PmsBrandMapper;
 import com.wanfeng.pojo.PmsBrand;
 import com.wanfeng.service.PmsBrandService;
+import lombok.experimental.Helper;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -46,5 +50,36 @@ public class PmsBrandServiceImpl implements PmsBrandService {
         }
         // 这里还需要添加修改商品的品牌名的操作
         return pmsBrandMapper.updateById(pmsBrand);
+    }
+
+    @Override
+    public int delete(Long id) {
+        return pmsBrandMapper.deleteById(id);
+    }
+
+    @Override
+    public int deleteBatch(List<Long> ids) {
+        return pmsBrandMapper.deleteBatchIds(ids);
+    }
+
+    @Override
+    public int updateShowStatus(List<Long> ids, Integer showStatus) {
+        return pmsBrandMapper.updateShowStatus(ids,showStatus);
+    }
+
+    @Override
+    public int updateFactoryStatus(List<Long> ids, Integer factoryStatus) {
+        return pmsBrandMapper.updateFactoryStatus(ids,factoryStatus);
+    }
+
+    @Override
+    public PmsBrand getById(Long id) {
+        return pmsBrandMapper.selectById(id);
+    }
+
+    @Override
+    public List<PmsBrand> pageList(String keyWord, Integer pageNum, Integer pageSize) {
+        PageHelper.startPage(pageNum,pageSize);
+        return pmsBrandMapper.selectList(new QueryWrapper<PmsBrand>().like("name",  keyWord));
     }
 }

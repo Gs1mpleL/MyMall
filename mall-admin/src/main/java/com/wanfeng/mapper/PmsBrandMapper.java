@@ -2,6 +2,9 @@ package com.wanfeng.mapper;
 
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.wanfeng.pojo.PmsBrand;
+import org.apache.ibatis.annotations.Param;
+
+import java.util.List;
 
 /**
  * @author wanfeng
@@ -9,4 +12,7 @@ import com.wanfeng.pojo.PmsBrand;
  * @package com.wanfeng.mapper
  */
 public interface PmsBrandMapper extends BaseMapper<PmsBrand> {
+    int updateShowStatus(@Param("ids")List<Long> ids, @Param("showStatus")Integer showStatus);
+
+    int updateFactoryStatus(@Param("ids")List<Long> ids, @Param("factoryStatus")Integer factoryStatus);
 }
