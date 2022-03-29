@@ -1,11 +1,14 @@
 package com.wanfeng.service.Impl;
 
 import com.wanfeng.pojo.UmsAdmin;
+import com.wanfeng.pojo.UmsResource;
 import com.wanfeng.service.RedisService;
 import com.wanfeng.service.UmsAdminCacheService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
 
 /**
  * @author wanfeng
@@ -40,5 +43,16 @@ public class UmsAdminCacheServiceImpl implements UmsAdminCacheService {
     public UmsAdmin getAdmin(String username) {
         String key = REDIS_DATABASE + ":" + REDIS_KEY_ADMIN + ":" + username;
         return (UmsAdmin) redisService.get(key);
+    }
+
+    @Override
+    public List<UmsResource> getResourceList(Long adminId) {
+        String key = REDIS_DATABASE + ":" + REDIS_KEY_RESOURCE_LIST + ":" + adminId;
+        return (List<UmsResource>) redisService.get(key);
+    }
+    @Override
+    public void setResourceList(Long adminId, List<UmsResource> resourceList) {
+        String key = REDIS_DATABASE + ":" + REDIS_KEY_RESOURCE_LIST + ":" + adminId;
+        redisService.set(key, resourceList, REDIS_EXPIRE);
     }
 }

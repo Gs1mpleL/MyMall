@@ -5,6 +5,7 @@ import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.wanfeng.dto.UmsAdminParam;
 import com.wanfeng.mapper.UmsAdminMapper;
 import com.wanfeng.pojo.UmsAdmin;
+import com.wanfeng.pojo.UmsResource;
 import com.wanfeng.service.RedisService;
 import com.wanfeng.service.UmsAdminCacheService;
 import com.wanfeng.service.UmsAdminService;
@@ -15,8 +16,11 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
 
 /**
  * @author wanfeng
@@ -27,16 +31,17 @@ import org.springframework.stereotype.Service;
 public class UmsAdminServiceImpl implements UmsAdminService {
     private UmsAdminMapper umsAdminMapper;
     private JwtTokenUtil jwtTokenUtil;
-    private PasswordEncoder passwordEncoder;
+    private UmsResourceServiceImpl umsResourceService;
     private UmsAdminCacheService umsAdminCacheService;
 
     @Autowired
-    public UmsAdminServiceImpl(UmsAdminMapper umsAdminMapper, JwtTokenUtil jwtTokenUtil, PasswordEncoder passwordEncoder, UmsAdminCacheService umsAdminCacheService) {
+    public UmsAdminServiceImpl(UmsAdminMapper umsAdminMapper, JwtTokenUtil jwtTokenUtil, UmsResourceServiceImpl umsResourceService, UmsAdminCacheService umsAdminCacheService) {
         this.umsAdminMapper = umsAdminMapper;
         this.jwtTokenUtil = jwtTokenUtil;
-        this.passwordEncoder = passwordEncoder;
+        this.umsResourceService = umsResourceService;
         this.umsAdminCacheService = umsAdminCacheService;
     }
+
 
     @Override
     public String login(UmsAdminParam umsAdminParam) {
@@ -46,6 +51,7 @@ public class UmsAdminServiceImpl implements UmsAdminService {
         String s;
         try {
             UserDetails userDetails = loginByUsername(username);
+            PasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
             if (!passwordEncoder.matches(password, userDetails.getPassword())) {
                 throw new UsernameNotFoundException("密码错误!");
             }
@@ -72,8 +78,8 @@ public class UmsAdminServiceImpl implements UmsAdminService {
     public UserDetails loginByUsername(String username) {
         UmsAdmin umsAdmin = getAdminFromRedisOrDataBase(username);
         if(umsAdmin != null){
-            System.out.println("这里缺少用户赋权的操作,可能会报缺少角色的bug");
-            return new AdminUserDetails(umsAdmin,null);
+            List<UmsResource> resourceById = umsResourceService.getResourceById(umsAdmin.getId());
+            return new AdminUserDetails(umsAdmin,resourceById);
         }
         // 在数据库和缓存中都没有找到需要的数据
         throw new UsernameNotFoundException("用户名或密码错误");

@@ -16,7 +16,7 @@ import java.io.IOException;
  * @created 2022/3/28 17:50
  * @package com.wanfeng.config
  */
-public class MytAuthenticationEntryPoint implements AuthenticationEntryPoint {
+public class MyAuthenticationEntryPoint implements AuthenticationEntryPoint {
     @Override
     public void commence(HttpServletRequest httpServletRequest, HttpServletResponse response, AuthenticationException e) throws IOException, ServletException {
         response.setHeader("Access-Control-Allow-Origin", "*");

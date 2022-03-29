@@ -1,9 +1,10 @@
 package com.wanfeng.config;
 
-import com.wanfeng.component.JwtAuthenticationTokenFilter;
-import com.wanfeng.component.MyAccessDeniedHandler;
-import com.wanfeng.component.MytAuthenticationEntryPoint;
+import com.wanfeng.component.*;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnBean;
 import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -12,6 +13,7 @@ import org.springframework.security.config.annotation.web.configurers.Expression
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.web.access.intercept.FilterSecurityInterceptor;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
 /**
@@ -19,12 +21,14 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
  * @created 2022/3/28 16:58
  * @package com.wanfeng.config
  */
+
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
     @Bean
     public PasswordEncoder passwordEncoder(){
         return new BCryptPasswordEncoder();
     }
-
+    @Autowired(required = false)
+    private DynamicSecurityService dynamicSecurityService;
     /**
      * 获得白名单
      */
@@ -45,8 +49,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
      * 未登录或失效处理器
      */
     @Bean
-    public MytAuthenticationEntryPoint mytAuthenticationEntryPoint(){
-        return new MytAuthenticationEntryPoint();
+    public MyAuthenticationEntryPoint myAuthenticationEntryPoint(){
+        return new MyAuthenticationEntryPoint();
     }
 
     /**
@@ -88,10 +92,12 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .exceptionHandling()
                 // 拒绝访问处理器
                 .accessDeniedHandler(myAccessDeniedHandler())
-                .authenticationEntryPoint(mytAuthenticationEntryPoint())
+                .authenticationEntryPoint(myAuthenticationEntryPoint())
                 .and()
                 .addFilterBefore(jwtAuthenticationTokenFilter(), UsernamePasswordAuthenticationFilter.class);
-
+        if(dynamicSecurityService!=null){
+            registry.and().addFilterBefore(dynamicSecurityFilter(), FilterSecurityInterceptor.class);
+        }
     }
 
     @Override
@@ -99,4 +105,24 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         auth.userDetailsService(userDetailsService())
                 .passwordEncoder(passwordEncoder());
     }
+    @ConditionalOnBean(name = "dynamicSecurityService")
+    @Bean
+    public DynamicSecurityFilter dynamicSecurityFilter() {
+        return new DynamicSecurityFilter();
+    }
+
+    @ConditionalOnBean(name = "dynamicSecurityService")
+    @Bean
+    public DynamicSecurityMetadataSource dynamicSecurityMetadataSource() {
+        return new DynamicSecurityMetadataSource();
+    }
+
+
+    @ConditionalOnBean(name = "dynamicSecurityService")
+    @Bean
+    public DynamicAccessDecisionManager dynamicAccessDecisionManager() {
+        return new DynamicAccessDecisionManager();
+    }
+
+
 }

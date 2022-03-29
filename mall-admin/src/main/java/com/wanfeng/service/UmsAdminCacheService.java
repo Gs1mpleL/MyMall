@@ -1,6 +1,9 @@
 package com.wanfeng.service;
 
 import com.wanfeng.pojo.UmsAdmin;
+import com.wanfeng.pojo.UmsResource;
+
+import java.util.List;
 
 /**
  * @author wanfeng
@@ -15,7 +18,16 @@ public interface UmsAdminCacheService {
 
     /**
      * 获取缓存用户
-     * @return
      */
     UmsAdmin getAdmin(String username);
+
+    /**
+     * 获取缓存后台用户资源列表
+     */
+    List<UmsResource> getResourceList(Long adminId);
+
+    /**
+     * 设置缓存后台用户资源列表
+     */
+    void setResourceList(Long adminId, List<UmsResource> resourceList);
 }
