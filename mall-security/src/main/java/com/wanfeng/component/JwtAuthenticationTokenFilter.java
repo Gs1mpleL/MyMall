@@ -45,9 +45,7 @@ public class JwtAuthenticationTokenFilter extends OncePerRequestFilter {
         System.out.println("进入Token前置过滤器！");
         String authHeader = request.getHeader(this.tokenHeader);
         System.out.println("获取Authorization的请求头内容 = "+authHeader);
-        System.out.println("开始判断Authorization是不是null，和是不是已Bearer 开头");
             if (authHeader != null && authHeader.startsWith(this.tokenHead)) {
-            System.out.println("是的呢");
             // The part after "Bearer "
             String authToken = authHeader.substring(this.tokenHead.length());
             System.out.println("截取后获得当前登录携带的token->" + authToken);

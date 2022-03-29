@@ -60,8 +60,10 @@ public class AdminSecurityConfig extends SecurityConfig{
                 List<UmsResource> resourceList = umsResourceService.list();
                 for (UmsResource umsResource : resourceList) {
                     map.put(umsResource.getUrl(),new org.springframework.security.access.SecurityConfig(umsResource.getId()+ ":" + umsResource.getName()));
-                    System.out.println("路径:" + umsResource.getUrl() + "对应配置 -> " +umsResource.getId()+ ":" + umsResource.getName());
+                    System.out.println("路径:" + umsResource.getUrl() + "\t对应配置 -> " +umsResource.getId()+ ":" + umsResource.getName());
                 }
+
+                System.out.println("------------------路径和权限已经一一对应---------------------");
                 return map;
             }
         };

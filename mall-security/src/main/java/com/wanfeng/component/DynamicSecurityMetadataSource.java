@@ -27,6 +27,7 @@ public class DynamicSecurityMetadataSource implements FilterInvocationSecurityMe
 
     @PostConstruct
     public void loadDataSource() {
+        System.out.println("-------------loadDataSource()---------------");
         configAttributeMap = dynamicSecurityService.loadDataSource();
     }
 
@@ -38,6 +39,7 @@ public class DynamicSecurityMetadataSource implements FilterInvocationSecurityMe
 
     @Override
     public Collection<ConfigAttribute> getAttributes(Object o) throws IllegalArgumentException {
+        System.out.println("----------- getAttributes()----------------");
         // 确保路径和权限已经一一对应
         if(configAttributeMap == null) this.loadDataSource();
         List<ConfigAttribute> configAttributes = new ArrayList<>();
@@ -49,8 +51,9 @@ public class DynamicSecurityMetadataSource implements FilterInvocationSecurityMe
         PathMatcher pathMatcher = new AntPathMatcher();
         for (String pattern : configAttributeMap.keySet()) {
             if (pathMatcher.match(pattern, path)) {
-                System.out.println("匹配到路径 -> 数据库中:" + pattern + "当前路径 -> " +path);
+                System.out.println("匹配到路径 -> 数据库中:" + pattern + "<--->当前路径 -> " +path);
                 configAttributes.add(configAttributeMap.get(pattern));
+                System.out.println("当前路径需要权限 : " + configAttributeMap.get(pattern) + "已经填入configAttributes等待权限检查" );
             }
         }
         return configAttributes;

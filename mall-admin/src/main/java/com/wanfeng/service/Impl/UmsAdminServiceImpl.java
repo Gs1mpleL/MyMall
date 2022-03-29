@@ -45,24 +45,29 @@ public class UmsAdminServiceImpl implements UmsAdminService {
 
     @Override
     public String login(UmsAdminParam umsAdminParam) {
+        System.out.println("----------login()-----------");
         String username = umsAdminParam.getUsername();
         String password = umsAdminParam.getPassword();
         // 要返回的token
         String s;
         try {
             UserDetails userDetails = loginByUsername(username);
+            System.out.println("通过loginByUsername()获得登录结果");
             PasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
             if (!passwordEncoder.matches(password, userDetails.getPassword())) {
+                System.out.println("login()发现密码错误!");
                 throw new UsernameNotFoundException("密码错误!");
             }
             if (!userDetails.isEnabled()) {
+                System.out.println("login()发现用户已经被禁用!");
                 throw new UsernameNotFoundException("用户已经被禁用");
             }
+
             UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities());
             SecurityContextHolder.getContext().setAuthentication(authentication);
-
+            System.out.println("将当前用户存入SecurityContextHolder");
             s = jwtTokenUtil.generateToken(userDetails);
-
+            System.out.println("为用户生成token" + s);
         } catch (UsernameNotFoundException e) {
             e.printStackTrace();
             return null;
@@ -76,12 +81,16 @@ public class UmsAdminServiceImpl implements UmsAdminService {
      */
     @Override
     public UserDetails loginByUsername(String username) {
+        System.out.println("------------------loginByUsername()执行---------------------");
         UmsAdmin umsAdmin = getAdminFromRedisOrDataBase(username);
         if(umsAdmin != null){
+
             List<UmsResource> resourceById = umsResourceService.getResourceById(umsAdmin.getId());
+            System.out.println("通过缓存或者数据库查询到用户的权限:" + resourceById);
             return new AdminUserDetails(umsAdmin,resourceById);
         }
         // 在数据库和缓存中都没有找到需要的数据
+        System.out.println("在数据库和缓存中都没有找到需要的数据");
         throw new UsernameNotFoundException("用户名或密码错误");
     }
 
@@ -90,15 +99,15 @@ public class UmsAdminServiceImpl implements UmsAdminService {
      */
     @Override
     public UmsAdmin getAdminFromRedisOrDataBase(String username) {
-
-
         UmsAdmin umsAdmin = umsAdminCacheService.getAdmin(username);
         if(umsAdmin!=null){
+            System.out.println("从缓存中查询到用户信息");
             return umsAdmin;
         }
         System.out.println("在Redis中未查询到用户");
         UmsAdmin umsAdminFromDb = umsAdminMapper.selectOne(new QueryWrapper<UmsAdmin>().eq("username", username));
         if(umsAdminFromDb!=null){
+            System.out.println("从数据库中查询到用户信息,并存入redis");
             // 在数据库查到后把用户存入redis
             umsAdminCacheService.setAdmin(umsAdminFromDb);
         }

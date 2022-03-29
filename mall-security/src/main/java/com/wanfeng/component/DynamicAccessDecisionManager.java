@@ -22,13 +22,18 @@ public class DynamicAccessDecisionManager implements AccessDecisionManager {
     public void decide(Authentication authentication, Object object, Collection<ConfigAttribute> configAttributes) throws AccessDeniedException, InsufficientAuthenticationException {
         // 当接口未被配置资源时直接放行
         if (CollUtil.isEmpty(configAttributes)) {
+            System.out.println("没有配置资源权限!");
             return;
         }
         // 检查
         for (ConfigAttribute configAttribute : configAttributes) {
+            System.out.println("---------------------开始检查权限---------------------");
             String needAuthority = configAttribute.getAttribute();
+            System.out.println("需要的权限是" + needAuthority);
             for (GrantedAuthority authority : authentication.getAuthorities()) {
+
                 if (needAuthority.trim().equals(authority.getAuthority())) {
+                    System.out.println("需要的权限：" + needAuthority + "\t 用户的权限：" + authority.getAuthority());
                     return;
                 }
             }
