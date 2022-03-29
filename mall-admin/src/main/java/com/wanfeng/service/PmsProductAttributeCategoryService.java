@@ -15,4 +15,6 @@ public interface PmsProductAttributeCategoryService {
     List<PmsProductAttributeCategory> listByPage(Integer pageNum, Integer pageSize);
 
     int deleteById(Long id);
+
+    int create(String name);
 }

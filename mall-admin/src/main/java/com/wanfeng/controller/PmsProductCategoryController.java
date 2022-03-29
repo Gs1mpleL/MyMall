@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 /**
+ * 商品分类管理
  * @author wanfeng
  * @create 2022/3/27 12:07
  * @package com.wanfeng.controller

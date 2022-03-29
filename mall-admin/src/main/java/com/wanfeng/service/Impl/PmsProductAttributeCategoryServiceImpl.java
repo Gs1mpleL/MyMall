@@ -37,4 +37,11 @@ public class PmsProductAttributeCategoryServiceImpl implements PmsProductAttribu
     public int deleteById(Long id) {
         return pmsProductAttributeCategoryMapper.deleteById(id);
     }
+
+    @Override
+    public int create(String name) {
+        PmsProductAttributeCategory pmsProductAttributeCategory = new PmsProductAttributeCategory();
+        pmsProductAttributeCategory.setName(name);
+        return pmsProductAttributeCategoryMapper.insert(pmsProductAttributeCategory);
+    }
 }

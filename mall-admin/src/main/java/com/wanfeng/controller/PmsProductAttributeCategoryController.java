@@ -47,4 +47,15 @@ public class PmsProductAttributeCategoryController {
             return CommonResult.failed();
         }
     }
+
+    @ApiOperation("添加商品属性分类")
+    @PostMapping("/create")
+    public CommonResult create(@RequestParam String name){
+        int count = pmsProductAttributeCategoryService.create(name);
+        if(count > 0){
+            return CommonResult.success(count);
+        }else{
+            return CommonResult.failed();
+        }
+    }
 }
