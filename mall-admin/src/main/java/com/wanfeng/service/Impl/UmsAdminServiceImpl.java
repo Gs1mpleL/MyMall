@@ -2,10 +2,12 @@ package com.wanfeng.service.Impl;
 
 import cn.hutool.jwt.JWTUtil;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.github.pagehelper.PageHelper;
 import com.wanfeng.dto.UmsAdminParam;
 import com.wanfeng.mapper.UmsAdminMapper;
 import com.wanfeng.pojo.UmsAdmin;
 import com.wanfeng.pojo.UmsResource;
+import com.wanfeng.pojo.UmsRole;
 import com.wanfeng.service.RedisService;
 import com.wanfeng.service.UmsAdminCacheService;
 import com.wanfeng.service.UmsAdminService;
@@ -21,6 +23,7 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import javax.management.relation.Role;
 import java.util.Date;
 import java.util.List;
 
@@ -137,4 +140,33 @@ public class UmsAdminServiceImpl implements UmsAdminService {
     public String refreshToken(String token) {
         return jwtTokenUtil.refreshToken(token);
     }
+
+    @Override
+    public List<UmsAdmin> list(String keyword, Integer pageNum, Integer pageSize) {
+        PageHelper.startPage(pageNum,pageSize);
+        QueryWrapper<UmsAdmin>queryWrapper = new QueryWrapper<>();
+        queryWrapper.like("username",keyword);
+        return umsAdminMapper.selectList(queryWrapper);
+    }
+
+    @Override
+    public int updateById(Long id, UmsAdmin umsAdmin) {
+        umsAdmin.setId(id);
+        UmsAdmin adminFromDb = umsAdminMapper.selectOne(new QueryWrapper<UmsAdmin>().eq("id", id));
+        if(!adminFromDb.getPassword().equals(new BCryptPasswordEncoder().encode(umsAdmin.getPassword()))){
+            umsAdmin.setPassword(new BCryptPasswordEncoder().encode(umsAdmin.getPassword()));
+        }
+        return umsAdminMapper.updateById(umsAdmin);
+    }
+
+    @Override
+    public int delById(Long id) {
+        return umsAdminMapper.deleteById(id);
+    }
+
+    @Override
+    public List<UmsRole> getRoleInfoById(Long id) {
+        return umsAdminMapper.getRoleInfoById(id);
+    }
+
 }

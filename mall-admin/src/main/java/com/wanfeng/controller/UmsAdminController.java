@@ -2,10 +2,12 @@ package com.wanfeng.controller;
 
 import com.wanfeng.dto.UmsAdminParam;
 import com.wanfeng.entry.CommonResult;
+import com.wanfeng.entry.PageResult;
 import com.wanfeng.pojo.UmsAdmin;
 import com.wanfeng.service.UmsAdminService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
+import io.swagger.models.auth.In;
 import lombok.Getter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -16,6 +18,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -77,4 +80,49 @@ public class UmsAdminController {
         System.out.println("这里写了从ThreadLocal中获取用户信息 就不继续写了");
         return CommonResult.success(authentication);
     }
+
+    @ApiOperation("登出")
+    @PostMapping("/logout")
+    public CommonResult logout(){
+        return CommonResult.success(null);
+    }
+
+    @ApiOperation("根据用户名分页获取用户列表")
+    @GetMapping("/list")
+    public CommonResult list(@RequestParam(value = "keyword",required = false) String keyword,
+                             @RequestParam(value = "pageNum",defaultValue = "1") Integer pageNum,
+                             @RequestParam(value = "pageSize",defaultValue = "5") Integer pageSize){
+        List<UmsAdmin> list = umsAdminService.list(keyword,pageNum,pageSize);
+        return CommonResult.success(PageResult.getPageResult(list));
+    }
+
+    @ApiOperation("修改指定用户的信息")
+    @PostMapping("/update/{id}")
+    public CommonResult updateById(@PathVariable("id") Long id,@RequestBody UmsAdmin umsAdmin){
+        int count = umsAdminService.updateById(id,umsAdmin);
+        if (count > 0) {
+            return CommonResult.success(count);
+        }else{
+            return CommonResult.failed();
+        }
+    }
+
+
+    @ApiOperation("删除账号")
+    @PostMapping("/del/{id}")
+    public CommonResult delById(@PathVariable Long id){
+        int count = umsAdminService.delById(id);
+        if (count > 0) {
+            return CommonResult.success(count);
+        }else{
+            return CommonResult.failed();
+        }
+    }
+
+    @ApiOperation("获取用户的角色")
+    @PostMapping("/info/role/{id}")
+    public CommonResult getRoleInfoById(@PathVariable Long id){
+        return CommonResult.success(umsAdminService.getRoleInfoById(id));
+    }
+
 }

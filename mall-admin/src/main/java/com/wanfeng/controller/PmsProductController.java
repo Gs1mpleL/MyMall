@@ -1,15 +1,13 @@
 package com.wanfeng.controller;
 
+import com.wanfeng.dto.PmsProductParam;
 import com.wanfeng.dto.PmsProductResult;
 import com.wanfeng.entry.CommonResult;
 import com.wanfeng.service.PmsProductService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 /**
  * @author wanfeng
@@ -29,4 +27,13 @@ public class PmsProductController {
          return CommonResult.success(pmsProductResult);
     }
 
+    @ApiOperation("创建商品")
+    @PostMapping("/create")
+    public CommonResult create(@RequestBody PmsProductParam pmsProductParam){
+        int count = pmsProductService.create(pmsProductParam);
+        if(count > 0){
+            return CommonResult.success(count);
+        }
+        return CommonResult.failed();
+    }
 }

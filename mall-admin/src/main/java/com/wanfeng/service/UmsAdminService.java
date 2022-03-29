@@ -2,7 +2,11 @@ package com.wanfeng.service;
 
 import com.wanfeng.dto.UmsAdminParam;
 import com.wanfeng.pojo.UmsAdmin;
+import com.wanfeng.pojo.UmsRole;
 import org.springframework.security.core.userdetails.UserDetails;
+
+import javax.management.relation.Role;
+import java.util.List;
 
 /**
  * @author wanfeng
@@ -20,4 +24,12 @@ public interface UmsAdminService {
     UmsAdmin register(UmsAdminParam umsAdminParam);
 
     String refreshToken(String token);
+
+    List<UmsAdmin> list(String keyword, Integer pageNum, Integer pageSize);
+
+    int updateById(Long id, UmsAdmin umsAdmin);
+
+    int delById(Long id);
+
+    List<UmsRole> getRoleInfoById(Long id);
 }

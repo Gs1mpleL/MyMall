@@ -1,5 +1,6 @@
 package com.wanfeng.service;
 
+import com.wanfeng.dto.PmsProductParam;
 import com.wanfeng.dto.PmsProductResult;
 
 /**
@@ -9,4 +10,6 @@ import com.wanfeng.dto.PmsProductResult;
  */
 public interface PmsProductService {
     PmsProductResult getById(Long id);
+
+    int create(PmsProductParam pmsProductParam);
 }
