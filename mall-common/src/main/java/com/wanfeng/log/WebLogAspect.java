@@ -14,6 +14,7 @@ import org.aspectj.lang.annotation.Pointcut;
 import org.aspectj.lang.reflect.MethodSignature;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.core.annotation.Order;
 import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -40,6 +41,7 @@ import java.util.Map;
 // 定义为注解类
 @Aspect
 @Component
+@Order(1)
 public class WebLogAspect {
     private static final Logger LOGGER = LoggerFactory.getLogger(WebLogAspect.class);
 
@@ -54,17 +56,19 @@ public class WebLogAspect {
     /**
      * 环绕通知
      * @param joinPoint 切入点
-     * @return
      */
     @Around("webLog()")
     public Object doAround(ProceedingJoinPoint joinPoint) throws Throwable {
+        System.out.println("------------------------------切面执行-------------------------------------");
         long startTime = System.currentTimeMillis();
         ServletRequestAttributes servletRequestAttributes= (ServletRequestAttributes)RequestContextHolder.getRequestAttributes();
         HttpServletRequest request = servletRequestAttributes.getRequest();
         WebLog webLog = new WebLog();
         // 记录信息
         // 获取方法结果
+        System.out.println("------------------------------代码执行-------------------------------------");
         Object proceed = joinPoint.proceed();
+        System.out.println("------------------------------切面执行-------------------------------------");
         Signature signature = joinPoint.getSignature();
         MethodSignature methodSignature = (MethodSignature) signature;
         Method method = methodSignature.getMethod();
@@ -94,7 +98,7 @@ public class WebLogAspect {
         logMap.put("spendTime",webLog.getSpendTime());
         logMap.put("description",webLog.getDescription());
         // LOGGER.info(Markers.appendEntries(logMap), JSONUtil.parse(webLog).toString());
-        System.out.println(proceed);
+        System.out.println("--------------------------日志记录(此处缺少对日志的处理只打印了一下)-------------------------------------\n"+logMap);
         return proceed;
     }
 

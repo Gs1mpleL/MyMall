@@ -1,5 +1,7 @@
 package com.wanfeng.utils;
 
+import cn.hutool.core.date.DateUtil;
+import cn.hutool.core.util.StrUtil;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
@@ -120,4 +122,40 @@ public class JwtTokenUtil {
         return new Date(System.currentTimeMillis() + expiration * 1000);
     }
 
+    public String refreshToken(String token) {
+        if(StrUtil.isEmpty(token)){
+            return null;
+        }
+        String newToken = token.substring(tokenHead.length());
+        if(StrUtil.isEmpty(token)){
+            return null;
+        }
+        //token校验不通过
+        Claims claims = getClaimsFromToken(newToken);
+        if(claims==null){
+            return null;
+        }
+        //如果token已经过期，不支持刷新
+        if(isTokenExpired(newToken)){
+            return null;
+        }
+        //如果token在30分钟之内刚刷新过，返回原token
+        if(tokenRefreshJustBefore(newToken,30*60)){
+            return newToken;
+        }else{
+            claims.put(CLAIM_KEY_CREATED, new Date());
+            return generateToken(claims);
+        }
+    }
+
+    private boolean tokenRefreshJustBefore(String token, int i) {
+        Claims claims = getClaimsFromToken(token);
+        Date created = claims.get(CLAIM_KEY_CREATED, Date.class);
+        Date refreshDate = new Date();
+        //刷新时间在创建时间的指定时间内
+        if(refreshDate.after(created)&&refreshDate.before(DateUtil.offsetSecond(created,i))){
+            return true;
+        }
+        return false;
+    }
 }

@@ -16,4 +16,8 @@ public interface UmsAdminService {
     UserDetails loginByUsername(String username);
 
     UmsAdmin getAdminFromRedisOrDataBase(String username);
+
+    UmsAdmin register(UmsAdminParam umsAdminParam);
+
+    String refreshToken(String token);
 }

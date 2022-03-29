@@ -11,6 +11,7 @@ import com.wanfeng.service.UmsAdminCacheService;
 import com.wanfeng.service.UmsAdminService;
 import com.wanfeng.utils.JwtTokenUtil;
 import io.jsonwebtoken.Jwt;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -20,6 +21,7 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -84,7 +86,6 @@ public class UmsAdminServiceImpl implements UmsAdminService {
         System.out.println("------------------loginByUsername()执行---------------------");
         UmsAdmin umsAdmin = getAdminFromRedisOrDataBase(username);
         if(umsAdmin != null){
-
             List<UmsResource> resourceById = umsResourceService.getResourceById(umsAdmin.getId());
             System.out.println("通过缓存或者数据库查询到用户的权限:" + resourceById);
             return new AdminUserDetails(umsAdmin,resourceById);
@@ -112,5 +113,28 @@ public class UmsAdminServiceImpl implements UmsAdminService {
             umsAdminCacheService.setAdmin(umsAdminFromDb);
         }
         return umsAdminFromDb;
+    }
+
+    @Override
+    public UmsAdmin register(UmsAdminParam umsAdminParam) {
+        UmsAdmin umsAdmin = new UmsAdmin();
+        BeanUtils.copyProperties(umsAdminParam,umsAdmin);
+        umsAdmin.setCreateTime(new Date());
+        umsAdmin.setStatus(1);
+        String username = umsAdmin.getUsername();
+        // 判断是否重名
+        UmsAdmin admin = umsAdminMapper.selectOne(new QueryWrapper<UmsAdmin>().eq("username", username));
+        if(admin!=null){
+            return null;
+        }
+        PasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
+        umsAdmin.setPassword(passwordEncoder.encode(umsAdmin.getPassword()));
+        umsAdminMapper.insert(umsAdmin);
+        return umsAdmin;
+    }
+
+    @Override
+    public String refreshToken(String token) {
+        return jwtTokenUtil.refreshToken(token);
     }
 }
