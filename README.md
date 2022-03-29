@@ -24,6 +24,9 @@
 > 如果使用原始方法，需要在每个路径上添加@PreAutorize("hasAuthority('xxxx')") 难以维护
 
 - 使用基于路径的动态权限控制
+- 在项目启动时，创建一个Map<String,ConfigAttribute>来存储url对应的权限
+- 实现一个路径拦截器，获取路径，根据Map获取对应的权限,交给权限校验Manager去决定
+- 校验manager根据当前用户拥有的权限和路径需要的权限作比较，若包含，就放行
 
 
 
