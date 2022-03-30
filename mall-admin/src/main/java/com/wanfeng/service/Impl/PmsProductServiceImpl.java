@@ -4,6 +4,7 @@ import cn.hutool.core.collection.CollUtil;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.wanfeng.dto.PmsProductParam;
 import com.wanfeng.dto.PmsProductResult;
+import com.wanfeng.mapper.PmsMemberPriceMapper;
 import com.wanfeng.mapper.PmsProductLadderMapper;
 import com.wanfeng.mapper.PmsProductMapper;
 import com.wanfeng.pojo.PmsProduct;
@@ -26,6 +27,10 @@ public class PmsProductServiceImpl implements PmsProductService {
     private PmsProductMapper pmsProductMapper;
     @Autowired
     private PmsProductLadderMapper pmsProductLadderMapper;
+    @Autowired
+    private PmsMemberPriceMapper memberPriceMapper;
+
+
 
     /**
      * 还有问题 先写别的模块了
@@ -38,7 +43,6 @@ public class PmsProductServiceImpl implements PmsProductService {
 
     @Override
     public int create(PmsProductParam pmsProductParam) {
-        System.out.println("?????");
         // 创建商品
         PmsProduct pmsProduct = pmsProductParam;
         pmsProduct.setId(null);
@@ -49,11 +53,12 @@ public class PmsProductServiceImpl implements PmsProductService {
         PmsProduct pmsProduct1 = pmsProductMapper.selectOne(new QueryWrapper<PmsProduct>().eq("name", name));
         // 因为在其他关系表中插入数据需要该商品的id，所以先添加数据后，获得该商品id
         Long id = pmsProduct1.getId();
+        System.out.println(pmsProductParam.getProductLadderList());
         // 设置商品阶梯价格
         setConnection(pmsProductLadderMapper, pmsProductParam.getProductLadderList(),id);
+        // 设置会员价格
+        setConnection(memberPriceMapper,pmsProductParam.getMemberPriceList(),id);
         return 1;
-        // 向一下关系表中添加id信息
-
     }
 
 

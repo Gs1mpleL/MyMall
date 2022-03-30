@@ -4,7 +4,7 @@
 
     <insert id="insertList">
         insert into pms_product_ladder (product_id, count, discount, price) VALUES
-        <foreach collection="list" index="index" item="item" separator="," open="(" close=")">
+        <foreach collection="list" index="index" item="item" separator=",">
             (#{item.productId,jdbcType=BIGINT},
             #{item.count,jdbcType=INTEGER},
             #{item.discount,jdbcType=DECIMAL},

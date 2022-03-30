@@ -2,6 +2,7 @@ package com.wanfeng.service;
 
 import com.wanfeng.dto.PmsProductParam;
 import com.wanfeng.dto.PmsProductResult;
+import org.springframework.transaction.annotation.Transactional;
 
 /**
  * @author wanfeng
@@ -11,5 +12,6 @@ import com.wanfeng.dto.PmsProductResult;
 public interface PmsProductService {
     PmsProductResult getById(Long id);
 
+    @Transactional
     int create(PmsProductParam pmsProductParam);
 }
