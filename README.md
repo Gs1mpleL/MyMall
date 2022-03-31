@@ -1,5 +1,6 @@
 # 使用自定义注解实现参数校验
-主要是实现ConstraintValidator<>接口
+@Constraint(validatedBy = FlagValidatorClass.class)，在自定义注解中加入这个注解指定谁来进行校验
+主要是实现ConstraintValidator<xxx,xxx>接口第一个需要指定为你自定义的校验注解类，第二个指定为你要校验属性的类型
 
 
 # 权限管理包 mall-security模块
@@ -153,4 +154,45 @@ SKU表，SKU表示的是一个具体的产品，产品名+各种属性参数
 ### oms_order_operate_history
 当对订单操作时，需要在这里记录
 
-## 
+
+### 对于用户来说，有一个购物车表
+将商品和用户关联
+
+可以根据购物车信息来生成一个订单，对于订单管理是交给后台来做
+
+## 营销管理
+
+### sms_flash_promotion
+限时购表
+create table sms_flash_promotion
+(
+id                   bigint not null auto_increment,
+title                varchar(200) comment '标题',
+start_date           date comment '开始日期',
+end_date             date comment '结束日期',
+status               int(1) comment '上下线状态',
+create_time          datetime comment '创建时间',
+primary key (id)
+);
+
+### sms_flash_promotion_session
+限购场次表
+create table sms_flash_promotion_session
+(
+id                   bigint not null auto_increment comment '编号',
+name                 varchar(200) comment '场次名称',
+start_time           time comment '每日开始时间',
+end_time             time comment '每日结束时间',
+status               int(1) comment '启用状态：0->不启用；1->启用',
+create_time          datetime comment '创建时间',
+primary key (id)
+);
+
+### 优惠卷
+sms_coupon：存储每种优惠卷的信息
+
+sms_coupon_history： 存储优惠卷使用与会员id关联，0，1区分会员是否使用了优惠券
+
+sms_coupon_product_relation： 优惠卷和商品关联
+
+sms_coupon_product_category_relation：优惠卷与商品类型关联，通过优惠卷表的字段use_type来区分到底与商品关联还是与商品类型关联

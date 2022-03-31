@@ -1,6 +1,6 @@
 package com.wanfeng.exception;
 
-import com.wanfeng.entry.CommonResult;
+import com.wanfeng.entry.R;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -15,8 +15,8 @@ import org.springframework.web.bind.annotation.ResponseBody;
 public class GlobalExceptionHandler {
     @ResponseBody
     @ExceptionHandler(Exception.class)
-    public CommonResult handleAllException(Exception e){
+    public R handleAllException(Exception e){
         e.printStackTrace();
-        return CommonResult.failed(e.getMessage() + "这是我自定义的异常处理结果!!!");
+        return R.failed(e.getMessage() + "这是我自定义的异常处理结果!!!");
     }
 }

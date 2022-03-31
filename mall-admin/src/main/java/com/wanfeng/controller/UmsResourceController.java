@@ -1,6 +1,6 @@
 package com.wanfeng.controller;
 
-import com.wanfeng.entry.CommonResult;
+import com.wanfeng.entry.R;
 import com.wanfeng.pojo.UmsResource;
 import com.wanfeng.service.UmsResourceService;
 import io.swagger.annotations.ApiOperation;
@@ -24,8 +24,8 @@ public class UmsResourceController {
 
     @ApiOperation("获取所有路径资源")
     @GetMapping("/list")
-    public CommonResult list(){
+    public R list(){
         List<UmsResource> list = umsResourceService.list();
-        return CommonResult.success(list);
+        return R.success(list);
     }
 }

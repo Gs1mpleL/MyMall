@@ -86,7 +86,6 @@ public class PmsProductServiceImpl implements PmsProductService {
             // 执行对应Mapper的插入操作
             Method insertList = mapper.getClass().getMethod("insertList",List.class);
             insertList.invoke(mapper,data);
-
         }catch (Exception e){
             e.printStackTrace();
         }

@@ -1,7 +1,7 @@
 package com.wanfeng.component;
 
 import cn.hutool.json.JSONUtil;
-import com.wanfeng.entry.CommonResult;
+import com.wanfeng.entry.R;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.web.access.AccessDeniedHandler;
 
@@ -20,7 +20,7 @@ public class MyAccessDeniedHandler implements AccessDeniedHandler {
         response.setHeader("Cache-Control","no-cache");
         response.setCharacterEncoding("UTF-8");
         response.setContentType("application/json");
-        response.getWriter().println(JSONUtil.parse(CommonResult.forbidden(e.getMessage())));
+        response.getWriter().println(JSONUtil.parse(R.forbidden(e.getMessage())));
         response.getWriter().flush();
     }
 }

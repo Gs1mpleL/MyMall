@@ -1,14 +1,11 @@
 package com.wanfeng.controller;
 
 import com.wanfeng.dto.UmsAdminParam;
-import com.wanfeng.entry.CommonResult;
+import com.wanfeng.entry.R;
 import com.wanfeng.entry.PageResult;
 import com.wanfeng.pojo.UmsAdmin;
 import com.wanfeng.service.UmsAdminService;
-import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
-import io.swagger.models.auth.In;
-import lombok.Getter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.Authentication;
@@ -41,88 +38,88 @@ public class UmsAdminController {
 
     @ApiOperation("登录并返回token")
     @PostMapping("/login")
-    public CommonResult login(@Validated @RequestBody UmsAdminParam umsAdminParam){
+    public R login(@Validated @RequestBody UmsAdminParam umsAdminParam){
         String token = umsAdminService.login(umsAdminParam);
         if(token == null){
-            return CommonResult.validateFailed("用户名或密码错误!");
+            return R.validateFailed("用户名或密码错误!");
         }
         Map<String, String> tokenMap = new HashMap<>();
         tokenMap.put("token", token);
         tokenMap.put("tokenHead", tokenHead);
-        return CommonResult.success(tokenMap);
+        return R.success(tokenMap);
     }
 
     @ApiOperation("用户注册")
     @PostMapping("register")
-    public CommonResult register(@Validated @RequestBody UmsAdminParam umsAdminParam){
+    public R register(@Validated @RequestBody UmsAdminParam umsAdminParam){
         UmsAdmin umsAdmin =  umsAdminService.register(umsAdminParam);
         if(umsAdmin!=null){
-            return CommonResult.success(umsAdmin);
+            return R.success(umsAdmin);
         }else{
-            return CommonResult.failed();
+            return R.failed();
         }
     }
 
 
     @ApiOperation("刷新token")
     @PostMapping("/refreshToken")
-    public CommonResult refreshToken(HttpServletRequest request){
+    public R refreshToken(HttpServletRequest request){
         String token = request.getHeader(tokenHeader);
         String refreshToken = umsAdminService.refreshToken(token);
         // 把新的token返回即可
-        return CommonResult.success(refreshToken);
+        return R.success(refreshToken);
     }
 
     @ApiOperation("获取当前用户信息")
     @GetMapping("/info")
-    public CommonResult getInfo(){
+    public R getInfo(){
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         System.out.println("这里写了从ThreadLocal中获取用户信息 就不继续写了");
-        return CommonResult.success(authentication);
+        return R.success(authentication);
     }
 
     @ApiOperation("登出")
     @PostMapping("/logout")
-    public CommonResult logout(){
-        return CommonResult.success(null);
+    public R logout(){
+        return R.success(null);
     }
 
     @ApiOperation("根据用户名分页获取用户列表")
     @GetMapping("/list")
-    public CommonResult list(@RequestParam(value = "keyword",required = false) String keyword,
-                             @RequestParam(value = "pageNum",defaultValue = "1") Integer pageNum,
-                             @RequestParam(value = "pageSize",defaultValue = "5") Integer pageSize){
+    public R list(@RequestParam(value = "keyword",required = false) String keyword,
+                  @RequestParam(value = "pageNum",defaultValue = "1") Integer pageNum,
+                  @RequestParam(value = "pageSize",defaultValue = "5") Integer pageSize){
         List<UmsAdmin> list = umsAdminService.list(keyword,pageNum,pageSize);
-        return CommonResult.success(PageResult.getPageResult(list));
+        return R.success(PageResult.getPageResult(list));
     }
 
     @ApiOperation("修改指定用户的信息")
     @PostMapping("/update/{id}")
-    public CommonResult updateById(@PathVariable("id") Long id,@RequestBody UmsAdmin umsAdmin){
+    public R updateById(@PathVariable("id") Long id, @RequestBody UmsAdmin umsAdmin){
         int count = umsAdminService.updateById(id,umsAdmin);
         if (count > 0) {
-            return CommonResult.success(count);
+            return R.success(count);
         }else{
-            return CommonResult.failed();
+            return R.failed();
         }
     }
 
 
     @ApiOperation("删除账号")
     @PostMapping("/del/{id}")
-    public CommonResult delById(@PathVariable Long id){
+    public R delById(@PathVariable Long id){
         int count = umsAdminService.delById(id);
         if (count > 0) {
-            return CommonResult.success(count);
+            return R.success(count);
         }else{
-            return CommonResult.failed();
+            return R.failed();
         }
     }
 
     @ApiOperation("获取用户的角色")
     @PostMapping("/info/role/{id}")
-    public CommonResult getRoleInfoById(@PathVariable Long id){
-        return CommonResult.success(umsAdminService.getRoleInfoById(id));
+    public R getRoleInfoById(@PathVariable Long id){
+        return R.success(umsAdminService.getRoleInfoById(id));
     }
 
 }

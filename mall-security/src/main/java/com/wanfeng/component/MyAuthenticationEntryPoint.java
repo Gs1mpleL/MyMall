@@ -1,7 +1,7 @@
 package com.wanfeng.component;
 
 import cn.hutool.json.JSONUtil;
-import com.wanfeng.entry.CommonResult;
+import com.wanfeng.entry.R;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.web.AuthenticationEntryPoint;
 
@@ -23,7 +23,7 @@ public class MyAuthenticationEntryPoint implements AuthenticationEntryPoint {
         response.setHeader("Cache-Control","no-cache");
         response.setCharacterEncoding("UTF-8");
         response.setContentType("application/json");
-        response.getWriter().println(JSONUtil.parse(CommonResult.unauthorized(e.getMessage())));
+        response.getWriter().println(JSONUtil.parse(R.unauthorized(e.getMessage())));
         response.getWriter().flush();
     }
 }
